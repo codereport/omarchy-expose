@@ -129,10 +129,13 @@ Ui.BorderSurface {
 
                 Item {
                     anchors.centerIn: parent
-                    width: parent.width * 2
-                    height: parent.height * 2
-                    scale: 0.5
-                    layer.enabled: true
+                    // Four displays can exhaust the display GPU when every
+                    // screencopy also keeps a double-resolution layer.
+                    readonly property bool doubleResolution: card.controller.multiMonitorMode !== "all-monitors"
+                    width: parent.width * (doubleResolution ? 2 : 1)
+                    height: parent.height * (doubleResolution ? 2 : 1)
+                    scale: doubleResolution ? 0.5 : 1
+                    layer.enabled: doubleResolution
                     layer.smooth: true
 
                     ScreencopyView {
